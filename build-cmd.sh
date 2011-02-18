@@ -36,9 +36,6 @@ pushd "$SOURCE_DIR"
             mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
 			
-			foo=`pwd`
-			echo "adebug current dir = $foo"
-
             cp Release/*\.lib $stage/lib/release/
             cp Debug/*\.lib $stage/lib/release/
 
