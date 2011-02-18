@@ -30,36 +30,37 @@ pushd "$SOURCE_DIR"
         "windows")
 			pushd msvc
             load_vsvars
-            build_sln "gmock.sln" "Debug|Win32"
-            build_sln "gmock.sln" "Release|Win32"
+            build_sln "$PROJECT.sln" "Debug|Win32"
+            build_sln "$PROJECT.sln" "Release|Win32"
 
             mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
+			
+			foo=`pwd`
+			echo "adebug current dir = $foo"
 
-            cp "contrib/vstudio/vc10/x86/ZlibStatDebug/zlibstat.lib" \
-                "$stage/lib/debug/zlibd.lib"
-            cp "contrib/vstudio/vc10/x86/ZlibStatRelease/zlibstat.lib" \
-                "$stage/lib/release/zlib.lib"
-            mkdir -p "$stage/include/zlib"
-            cp {zlib.h,zconf.h} "$stage/include/zlib"
+            cp Release/*\.lib $stage/lib/release/
+            cp Debug/*\.lib $stage/lib/release/
+
+            mkdir -p "$stage/include/$PROJECT"
+			popd
+            cp -r include "$stage/"
         ;;
         "darwin")
             ./configure --prefix="$stage"
             make
             make install
-			mkdir -p "$stage/include/zlib"
-			mv "$stage/include/"*.h "$stage/include/zlib/"
+			mkdir -p "$stage/include/$PROJECT"
         ;;
         "linux")
             CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage"
             make
             make install
-			mkdir -p "$stage/include/zlib"
-			mv "$stage/include/"*.h "$stage/include/zlib/"
+			mkdir -p "$stage/include/$PROJECT"
         ;;
     esac
     mkdir -p "$stage/LICENSES"
-    tail -n 31 README > "$stage/LICENSES/zlib.txt"
+    cp COPYING  "$stage/LICENSES/zlib.txt"
 popd
 
 pass
