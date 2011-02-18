@@ -57,7 +57,7 @@ pushd "$SOURCE_DIR"
         ;;
     esac
     mkdir -p "$stage/LICENSES"
-    cp COPYING  "$stage/LICENSES/zlib.txt"
+    cp COPYING  "$stage/LICENSES/$PROJECT.txt"
 popd
 
 pass
