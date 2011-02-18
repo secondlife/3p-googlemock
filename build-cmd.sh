@@ -28,12 +28,10 @@ stage="$(pwd)/stage"
 pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
         "windows")
+			pushd msvc
             load_vsvars
-            #build_sln "google-perftools.sln" "Debug|Win32" "zlibstat"
-            #build_sln "google-perftools.sln" "Release|Win32" "zlibstat"
-            
-            build_sln "google-perftools.sln" "Debug|Win32"
-            build_sln "google-perftools.sln" "Release|Win32"
+            build_sln "gmock.sln" "Debug|Win32"
+            build_sln "gmock.sln" "Release|Win32"
 
             mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
