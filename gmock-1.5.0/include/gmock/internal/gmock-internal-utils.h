@@ -198,8 +198,6 @@ class ImplicitlyConvertible {
   // size of Helper(x), which can be done at compile time, we can tell
   // which version of Helper() is used, and hence whether x can be
   // implicitly converted to type To.
-  static char Helper(To);
-  static char (&Helper(...))[2];  // NOLINT
 
   // We have to put the 'public' section after the 'private' section,
   // or MSVC refuses to compile the code.
@@ -207,16 +205,7 @@ class ImplicitlyConvertible {
   // MSVC warns about implicitly converting from double to int for
   // possible loss of data, so we need to temporarily disable the
   // warning.
-#ifdef _MSC_VER
-#pragma warning(push)          // Saves the current warning state.
-#pragma warning(disable:4244)  // Temporarily disables warning 4244.
-  static const bool value =
-      sizeof(Helper(ImplicitlyConvertible::MakeFrom())) == 1;
-#pragma warning(pop)           // Restores the warning state.
-#else
-  static const bool value =
-      sizeof(Helper(ImplicitlyConvertible::MakeFrom())) == 1;
-#endif  // _MSV_VER
+  static const bool value = std::is_convertible<From, To>::value;
 };
 template <typename From, typename To>
 const bool ImplicitlyConvertible<From, To>::value;

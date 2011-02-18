@@ -845,7 +845,8 @@ TEST(PrintTupleTest, VariousSizes) {
   const char* const str = "8";
   tuple<bool, char, short, testing::internal::Int32,  // NOLINT
       testing::internal::Int64, float, double, const char*, void*, string>
-      t10(false, 'a', 3, 4, 5, 1.5F, -2.5, str, NULL, "10");
+      //t10(false, 'a', 3, 4, 5, 1.5F, -2.5, str, NULL, "10");
+      t10(false, 'a', 3, 4, 5, 1.5F, -2.5, str, static_cast<void*>(NULL), "10");
   EXPECT_EQ("(false, 'a' (97), 3, 4, 5, 1.5, -2.5, " + PrintPointer(str) +
             " pointing to \"8\", NULL, \"10\")",
             Print(t10));
