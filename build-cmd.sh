@@ -28,34 +28,38 @@ stage="$(pwd)/stage"
 pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
         "windows")
-			pushd msvc
+            pushd msvc
             load_vsvars
             build_sln "$PROJECT.sln" "Debug|Win32"
             build_sln "$PROJECT.sln" "Release|Win32"
 
             mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
-			
+
             cp Release/*\.lib $stage/lib/release/
             cp Debug/*\.lib $stage/lib/release/
 
+            # copy headers
             mkdir -p "$stage/include/$PROJECT"
-			popd
-            cp -r include "$stage/"
+            popd
+            cp -rv include "$stage/"
+
         ;;
         "darwin")
+            # TODO: fix the mac build
             ./configure --prefix="$stage"
             make
             make install
-			mkdir -p "$stage/include/$PROJECT"
         ;;
         "linux")
+            # TODO: fix the linux build
             CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage"
             make
             make install
-			mkdir -p "$stage/include/$PROJECT"
         ;;
     esac
+
+	# copy license info
     mkdir -p "$stage/LICENSES"
     cp COPYING  "$stage/LICENSES/$PROJECT.txt"
 popd
