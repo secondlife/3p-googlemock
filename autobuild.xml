@@ -10,7 +10,7 @@
       <key>license</key>
       <string>BSD</string>
       <key>license_file</key>
-      <string>LICENSES/COPYING</string>
+      <string>LICENSES/gmock.txt</string>
       <key>name</key>
       <string>gmock</string>
       <key>platforms</key>
@@ -35,6 +35,11 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>include/gmock/*.h</string>
+            <string>include/gmock/internal/*.h</string>
+          </array>
           <key>name</key>
           <string>common</string>
         </map>
@@ -95,6 +100,11 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>lib/debug/*.lib</string>
+            <string>lib/release/*.lib</string>
+          </array>
           <key>name</key>
           <string>windows</string>
         </map>

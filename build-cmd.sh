@@ -37,7 +37,7 @@ pushd "$SOURCE_DIR"
             mkdir -p "$stage/lib/release"
 
             cp Release/*\.lib $stage/lib/release/
-            cp Debug/*\.lib $stage/lib/release/
+            cp Debug/*\.lib $stage/lib/debug/
 
             # copy headers
             mkdir -p "$stage/include/$PROJECT"
