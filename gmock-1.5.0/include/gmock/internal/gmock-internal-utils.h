@@ -57,6 +57,13 @@
 #define GMOCK_ATTRIBUTE_UNUSED_
 #endif  // __GNUC__
 
+#ifdef USE_BOOST_TYPE_TRAITS
+#include <boost/type_traits/is_convertible.hpp>
+using boost::is_convertible;
+#else
+using std::is_convertible;
+#endif
+
 class ProtocolMessage;
 namespace proto2 { class Message; }
 
@@ -205,7 +212,7 @@ class ImplicitlyConvertible {
   // MSVC warns about implicitly converting from double to int for
   // possible loss of data, so we need to temporarily disable the
   // warning.
-  static const bool value = std::is_convertible<From, To>::value;
+  static const bool value = is_convertible<From, To>::value;
 };
 template <typename From, typename To>
 const bool ImplicitlyConvertible<From, To>::value;
