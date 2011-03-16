@@ -47,9 +47,13 @@ pushd "$SOURCE_DIR"
         ;;
         "darwin")
             # TODO: fix the mac build
-            ./configure --prefix="$stage"
+            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" ./configure --prefix="$stage"
             make
             make install
+            
+            mv "$stage/lib" "$stage/release"
+            mkdir -p "$stage/lib"
+            mv "$stage/release" "$stage/lib"
         ;;
         "linux")
             # TODO: fix the linux build

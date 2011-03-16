@@ -1,6 +1,33 @@
 <?xml version="1.0" ?>
 <llsd>
 <map>
+    <key>installables</key>
+    <map>
+      <key>boost</key>
+      <map>
+        <key>license</key>
+        <string>boost</string>
+        <key>license_file</key>
+        <string>LICENSES/boost.txt</string>
+        <key>name</key>
+        <string>boost</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d98078791ce345bf6168ce9ba53ca2d7</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/222752/arch/Darwin/installer/boost-1.45.0-darwin-20110304.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+        </map>
+      </map>
+    </map>
     <key>package_description</key>
     <map>
       <key>copyright</key>
@@ -60,6 +87,10 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>lib/release/*.a</string>
+          </array>
           <key>name</key>
           <string>darwin</string>
         </map>
