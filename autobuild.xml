@@ -25,6 +25,18 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>a34e7fffdb94a6a4d8a2966b1f216da3</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/boost-1.45.0-linux-20110310.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
         </map>
       </map>
     </map>
@@ -111,6 +123,12 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>lib/*.a</string>
+            <string>lib/*.la</string>
+            <string>lib/*.so*</string>
+          </array>
           <key>name</key>
           <string>linux</string>
         </map>

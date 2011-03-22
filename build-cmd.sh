@@ -56,8 +56,7 @@ pushd "$SOURCE_DIR"
             mv "$stage/release" "$stage/lib"
         ;;
         "linux")
-            # TODO: fix the linux build
-            CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage"
+            CC=gcc-4.1 CXX=g++-4.1 CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage"
             make
             make install
         ;;
