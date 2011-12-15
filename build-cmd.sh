@@ -56,9 +56,21 @@ pushd "$SOURCE_DIR"
             mv "$stage/release" "$stage/lib"
         ;;
         "linux")
-            CC=gcc-4.1 CXX=g++-4.1 CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage"
+            # Prefer gcc-4.1 if available. 
+            if [[ -f /usr/bin/gcc-4.1 && -f /usr/bin/g++-4.1 ]] ; then
+                export CC=gcc-4.1
+                export CXX=g++-4.1
+            fi
+            
+            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32 -O2" CXXFLAGS="-m32" ./configure --prefix="$stage" --libdir="$stage/lib/release"
             make
             make install
+            
+            make distclean
+            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32 -O0 -g" CXXFLAGS="-m32" ./configure --prefix="$stage" --libdir="$stage/lib/debug"
+            make
+            make install
+            
         ;;
     esac
 
