@@ -78,6 +78,8 @@
           <array>
             <string>include/gmock/*.h</string>
             <string>include/gmock/internal/*.h</string>
+            <string>include/gtest/*.h</string>
+            <string>include/gtest/internal/*.h</string>
           </array>
           <key>name</key>
           <string>common</string>
