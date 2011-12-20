@@ -56,7 +56,6 @@ pushd "$SOURCE_DIR"
             mv "$stage/release" "$stage/lib"
         ;;
         "linux")
-            make distclean
             # Prefer gcc-4.1 if available. 
             if [[ -f /usr/bin/gcc-4.1 && -f /usr/bin/g++-4.1 ]] ; then
                 export CC=gcc-4.1
