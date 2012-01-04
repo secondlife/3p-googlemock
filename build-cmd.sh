@@ -28,7 +28,7 @@ stage="$(pwd)/stage"
 pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
         "windows")
-            pushd msvc
+            pushd msvc/2010
             load_vsvars
             build_sln "$PROJECT.sln" "Debug|Win32"
             build_sln "$PROJECT.sln" "Release|Win32"
