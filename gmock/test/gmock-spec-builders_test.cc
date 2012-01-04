@@ -33,16 +33,17 @@
 //
 // This file tests the spec builder syntax.
 
-#include <gmock/gmock-spec-builders.h>
+#include "gmock/gmock-spec-builders.h"
 
 #include <ostream>  // NOLINT
 #include <sstream>
 #include <string>
 
-#include <gmock/gmock.h>
-#include <gmock/internal/gmock-port.h>
-#include <gtest/gtest.h>
-#include <gtest/gtest-spi.h>
+#include "gmock/gmock.h"
+#include "gmock/internal/gmock-port.h"
+#include "gtest/gtest.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/internal/gtest-port.h"
 
 namespace testing {
 namespace internal {
@@ -88,6 +89,7 @@ using testing::Ne;
 using testing::Return;
 using testing::Sequence;
 using testing::internal::ExpectationTester;
+using testing::internal::FormatFileLocation;
 using testing::internal::g_gmock_mutex;
 using testing::internal::kErrorVerbosity;
 using testing::internal::kInfoVerbosity;
@@ -95,11 +97,39 @@ using testing::internal::kWarningVerbosity;
 using testing::internal::String;
 using testing::internal::string;
 
-#if GTEST_HAS_STREAM_REDIRECTION_
+#if GTEST_HAS_STREAM_REDIRECTION
 using testing::HasSubstr;
 using testing::internal::CaptureStdout;
 using testing::internal::GetCapturedStdout;
-#endif  // GTEST_HAS_STREAM_REDIRECTION_
+#endif
+
+class Incomplete;
+
+class MockIncomplete {
+ public:
+  // This line verifies that a mock method can take a by-reference
+  // argument of an incomplete type.
+  MOCK_METHOD1(ByRefFunc, void(const Incomplete& x));
+};
+
+// Tells Google Mock how to print a value of type Incomplete.
+void PrintTo(const Incomplete& x, ::std::ostream* os);
+
+TEST(MockMethodTest, CanInstantiateWithIncompleteArgType) {
+  // Even though this mock class contains a mock method that takes
+  // by-reference an argument whose type is incomplete, we can still
+  // use the mock, as long as Google Mock knows how to print the
+  // argument.
+  MockIncomplete incomplete;
+  EXPECT_CALL(incomplete, ByRefFunc(_))
+      .Times(AnyNumber());
+}
+
+// The definition of the printer for the argument type doesn't have to
+// be visible where the mock is used.
+void PrintTo(const Incomplete& /* x */, ::std::ostream* os) {
+  *os << "incomplete";
+}
 
 class Result {};
 
@@ -518,7 +548,7 @@ TEST(ExpectCallSyntaxTest, DefaultCardinalityIsOnce) {
   }, "to be called once");
 }
 
-#if GTEST_HAS_STREAM_REDIRECTION_
+#if GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that Google Mock doesn't print a warning when the number of
 // WillOnce() is adequate.
@@ -643,7 +673,7 @@ TEST(ExpectCallSyntaxTest, WarnsOnTooFewActions) {
   b.DoB();
 }
 
-#endif  // GTEST_HAS_STREAM_REDIRECTION_
+#endif  // GTEST_HAS_STREAM_REDIRECTION
 
 // Tests the semantics of ON_CALL().
 
@@ -797,7 +827,20 @@ TEST(ExpectCallTest, NthMatchTakesNthAction) {
   EXPECT_EQ(3, b.DoB());
 }
 
-#if GTEST_HAS_STREAM_REDIRECTION_
+// Tests that the WillRepeatedly() action is taken when the WillOnce(...)
+// list is exhausted.
+TEST(ExpectCallTest, TakesRepeatedActionWhenWillListIsExhausted) {
+  MockB b;
+  EXPECT_CALL(b, DoB())
+      .WillOnce(Return(1))
+      .WillRepeatedly(Return(2));
+
+  EXPECT_EQ(1, b.DoB());
+  EXPECT_EQ(2, b.DoB());
+  EXPECT_EQ(2, b.DoB());
+}
+
+#if GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that the default action is taken when the WillOnce(...) list is
 // exhausted and there is no WillRepeatedly().
@@ -832,20 +875,33 @@ TEST(ExpectCallTest, TakesDefaultActionWhenWillListIsExhausted) {
                         " - returning default value."));
 }
 
-#endif  // GTEST_HAS_STREAM_REDIRECTION_
-
-// Tests that the WillRepeatedly() action is taken when the WillOnce(...)
-// list is exhausted.
-TEST(ExpectCallTest, TakesRepeatedActionWhenWillListIsExhausted) {
+TEST(FunctionMockerTest, ReportsExpectCallLocationForExhausedActions) {
   MockB b;
-  EXPECT_CALL(b, DoB())
-      .WillOnce(Return(1))
-      .WillRepeatedly(Return(2));
+  std::string expect_call_location = FormatFileLocation(__FILE__, __LINE__ + 1);
+  EXPECT_CALL(b, DoB()).Times(AnyNumber()).WillOnce(Return(1));
 
   EXPECT_EQ(1, b.DoB());
-  EXPECT_EQ(2, b.DoB());
-  EXPECT_EQ(2, b.DoB());
+
+  CaptureStdout();
+  EXPECT_EQ(0, b.DoB());
+  const String output = GetCapturedStdout();
+  // The warning message should contain the call location.
+  EXPECT_PRED_FORMAT2(IsSubstring, expect_call_location, output);
 }
+
+TEST(FunctionMockerTest, ReportsDefaultActionLocationOfUninterestingCalls) {
+  std::string on_call_location;
+  CaptureStdout();
+  {
+    MockB b;
+    on_call_location = FormatFileLocation(__FILE__, __LINE__ + 1);
+    ON_CALL(b, DoB(_)).WillByDefault(Return(0));
+    b.DoB(0);
+  }
+  EXPECT_PRED_FORMAT2(IsSubstring, on_call_location, GetCapturedStdout());
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that an uninteresting call performs the default action.
 TEST(UninterestingCallTest, DoesDefaultAction) {
@@ -1299,12 +1355,33 @@ TEST(SequenceTest, Retirement) {
 TEST(ExpectationTest, ConstrutorsWork) {
   MockA a;
   Expectation e1;  // Default ctor.
-  Expectation e2 = EXPECT_CALL(a, DoA(1));  // Ctor from EXPECT_CALL.
-  Expectation e3 = e2;  // Copy ctor.
+
+  // Ctor from various forms of EXPECT_CALL.
+  Expectation e2 = EXPECT_CALL(a, DoA(2));
+  Expectation e3 = EXPECT_CALL(a, DoA(3)).With(_);
+  {
+    Sequence s;
+    Expectation e4 = EXPECT_CALL(a, DoA(4)).Times(1);
+    Expectation e5 = EXPECT_CALL(a, DoA(5)).InSequence(s);
+  }
+  Expectation e6 = EXPECT_CALL(a, DoA(6)).After(e2);
+  Expectation e7 = EXPECT_CALL(a, DoA(7)).WillOnce(Return());
+  Expectation e8 = EXPECT_CALL(a, DoA(8)).WillRepeatedly(Return());
+  Expectation e9 = EXPECT_CALL(a, DoA(9)).RetiresOnSaturation();
+
+  Expectation e10 = e2;  // Copy ctor.
 
   EXPECT_THAT(e1, Ne(e2));
-  EXPECT_THAT(e2, Eq(e3));
-  a.DoA(1);
+  EXPECT_THAT(e2, Eq(e10));
+
+  a.DoA(2);
+  a.DoA(3);
+  a.DoA(4);
+  a.DoA(5);
+  a.DoA(6);
+  a.DoA(7);
+  a.DoA(8);
+  a.DoA(9);
 }
 
 TEST(ExpectationTest, AssignmentWorks) {
@@ -1640,14 +1717,14 @@ TEST(DeletingMockEarlyTest, Success2) {
 // Suppresses warning on unreferenced formal parameter in MSVC with
 // -W4.
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4100)
+# pragma warning(push)
+# pragma warning(disable:4100)
 #endif
 
 ACTION_P(Delete, ptr) { delete ptr; }
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+# pragma warning(pop)
 #endif
 
 TEST(DeletingMockEarlyTest, CanDeleteSelfInActionReturningVoid) {
@@ -1783,7 +1860,26 @@ class MockC {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(MockC);
 };
 
-#if GTEST_HAS_STREAM_REDIRECTION_
+class VerboseFlagPreservingFixture : public testing::Test {
+ protected:
+  // The code needs to work when both ::string and ::std::string are defined
+  // and the flag is implemented as a testing::internal::String.  In this
+  // case, without the call to c_str(), the compiler will complain that it
+  // cannot figure out what overload of string constructor to use.
+  // TODO(vladl@google.com): Use internal::string instead of String for
+  // string flags in Google Test.
+  VerboseFlagPreservingFixture()
+      : saved_verbose_flag_(GMOCK_FLAG(verbose).c_str()) {}
+
+  ~VerboseFlagPreservingFixture() { GMOCK_FLAG(verbose) = saved_verbose_flag_; }
+
+ private:
+  const string saved_verbose_flag_;
+
+  GTEST_DISALLOW_COPY_AND_ASSIGN_(VerboseFlagPreservingFixture);
+};
+
+#if GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that an uninteresting mock function call generates a warning
 // containing the stack trace.
@@ -1794,7 +1890,9 @@ TEST(FunctionCallMessageTest, UninterestingCallGeneratesFyiWithStackTrace) {
   const String output = GetCapturedStdout();
   EXPECT_PRED_FORMAT2(IsSubstring, "GMOCK WARNING", output);
   EXPECT_PRED_FORMAT2(IsSubstring, "Stack trace:", output);
-#ifndef NDEBUG
+
+# ifndef NDEBUG
+
   // We check the stack trace content in dbg-mode only, as opt-mode
   // may inline the call we are interested in seeing.
 
@@ -1808,7 +1906,8 @@ TEST(FunctionCallMessageTest, UninterestingCallGeneratesFyiWithStackTrace) {
   c.NonVoidMethod();
   const String output2 = GetCapturedStdout();
   EXPECT_PRED_FORMAT2(IsSubstring, "NonVoidMethod(", output2);
-#endif  // NDEBUG
+
+# endif  // NDEBUG
 }
 
 // Tests that an uninteresting mock function call causes the function
@@ -1836,13 +1935,13 @@ TEST(FunctionCallMessageTest, UninterestingCallPrintsArgumentsAndReturnValue) {
                   "Uninteresting mock function call - returning directly\\.\n"
                   "    Function call: VoidMethod"
                   "\\(false, 5, \"Hi\", NULL, @.+ "
-                  "Printable, 4-byte object <0000 0000>\\)"));
+                  "Printable, 4-byte object <00-00 00-00>\\)"));
   // A void function has no return value to print.
 }
 
 // Tests how the --gmock_verbose flag affects Google Mock's output.
 
-class GMockVerboseFlagTest : public testing::Test {
+class GMockVerboseFlagTest : public VerboseFlagPreservingFixture {
  public:
   // Verifies that the given Google Mock output is correct.  (When
   // should_print is true, the output should match the given regex and
@@ -1853,14 +1952,14 @@ class GMockVerboseFlagTest : public testing::Test {
                     const string& function_name) {
     if (should_print) {
       EXPECT_THAT(output.c_str(), HasSubstr(expected_substring));
-#ifndef NDEBUG
+# ifndef NDEBUG
       // We check the stack trace content in dbg-mode only, as opt-mode
       // may inline the call we are interested in seeing.
       EXPECT_THAT(output.c_str(), HasSubstr(function_name));
-#else
+# else
       // Suppresses 'unused function parameter' warnings.
       static_cast<void>(function_name);
-#endif  // NDEBUG
+# endif  // NDEBUG
     } else {
       EXPECT_STREQ("", output.c_str());
     }
@@ -1960,7 +2059,7 @@ TEST_F(GMockVerboseFlagTest, InvalidFlagIsTreatedAsWarning) {
   TestUninterestingCall(true);
 }
 
-#endif  // GTEST_HAS_STREAM_REDIRECTION_
+#endif  // GTEST_HAS_STREAM_REDIRECTION
 
 // A helper class that generates a failure when printed.  We use it to
 // ensure that Google Mock doesn't print a value (even to an internal
@@ -1982,22 +2081,9 @@ class LogTestHelper {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(LogTestHelper);
 };
 
-class GMockLogTest : public ::testing::Test {
+class GMockLogTest : public VerboseFlagPreservingFixture {
  protected:
-  virtual void SetUp() {
-    // The code needs to work when both ::string and ::std::string are
-    // defined and the flag is implemented as a
-    // testing::internal::String.  In this case, without the call to
-    // c_str(), the compiler will complain that it cannot figure out
-    // whether the String flag should be converted to a ::string or an
-    // ::std::string before being assigned to original_verbose_.
-    original_verbose_ = GMOCK_FLAG(verbose).c_str();
-  }
-
-  virtual void TearDown() { GMOCK_FLAG(verbose) = original_verbose_; }
-
   LogTestHelper helper_;
-  string original_verbose_;
 };
 
 TEST_F(GMockLogTest, DoesNotPrintGoodCallInternallyIfVerbosityIsWarning) {
@@ -2358,9 +2444,23 @@ TEST(VerifyAndClearTest, DoesNotAffectOtherMockObjects) {
 // action or as a default action without causing a dead lock.  It
 // verifies that the action is not performed inside the critical
 // section.
+TEST(SynchronizationTest, CanCallMockMethodInAction) {
+  MockA a;
+  MockC c;
+  ON_CALL(a, DoA(_))
+      .WillByDefault(IgnoreResult(InvokeWithoutArgs(&c,
+                                                    &MockC::NonVoidMethod)));
+  EXPECT_CALL(a, DoA(1));
+  EXPECT_CALL(a, DoA(1))
+      .WillOnce(Invoke(&a, &MockA::DoA))
+      .RetiresOnSaturation();
+  EXPECT_CALL(c, NonVoidMethod());
 
-void Helper(MockC* c) {
-  c->NonVoidMethod();
+  a.DoA(1);
+  // This will match the second EXPECT_CALL() and trigger another a.DoA(1),
+  // which will in turn match the first EXPECT_CALL() and trigger a call to
+  // c.NonVoidMethod() that was specified by the ON_CALL() since the first
+  // EXPECT_CALL() did not specify an action.
 }
 
 }  // namespace

@@ -44,7 +44,7 @@
 //      ReturnNull
 //      ReturnRef
 //      Assign
-//      SetArgumentPointee
+//      SetArgPointee
 //      SetArrayArgument
 //      SetErrnoAndReturn
 //      Invoke(function)
@@ -114,14 +114,14 @@
 #ifndef GMOCK_TEST_GMOCK_LINK_TEST_H_
 #define GMOCK_TEST_GMOCK_LINK_TEST_H_
 
-#include <gmock/gmock.h>
+#include "gmock/gmock.h"
 
 #if !GTEST_OS_WINDOWS_MOBILE
-#include <errno.h>
+# include <errno.h>
 #endif
 
-#include <gmock/internal/gmock-port.h>
-#include <gtest/gtest.h>
+#include "gmock/internal/gmock-port.h"
+#include "gtest/gtest.h"
 #include <iostream>
 #include <vector>
 
@@ -164,7 +164,7 @@ using testing::ResultOf;
 using testing::Return;
 using testing::ReturnNull;
 using testing::ReturnRef;
-using testing::SetArgumentPointee;
+using testing::SetArgPointee;
 using testing::SetArrayArgument;
 using testing::StartsWith;
 using testing::StrCaseEq;
@@ -281,12 +281,12 @@ TEST(LinkTest, TestAssign) {
   mock.VoidFromString(NULL);
 }
 
-// Tests the linkage of the SetArgumentPointee action.
-TEST(LinkTest, TestSetArgumentPointee) {
+// Tests the linkage of the SetArgPointee action.
+TEST(LinkTest, TestSetArgPointee) {
   Mock mock;
   char ch = 'x';
 
-  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(SetArgumentPointee<0>('y'));
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(SetArgPointee<0>('y'));
   mock.VoidFromString(&ch);
 }
 
@@ -381,7 +381,7 @@ TEST(LinkTest, TestDoAll) {
   char ch = 'x';
 
   EXPECT_CALL(mock, VoidFromString(_))
-      .WillOnce(DoAll(SetArgumentPointee<0>('y'), Return()));
+      .WillOnce(DoAll(SetArgPointee<0>('y'), Return()));
   mock.VoidFromString(&ch);
 }
 
@@ -419,8 +419,8 @@ TEST(LinkTest, TestThrow) {
 // is expanded and macro expansion cannot contain #pragma.  Therefore
 // we suppress them here.
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4100)
+# pragma warning(push)
+# pragma warning(disable:4100)
 #endif
 
 // Tests the linkage of actions created using ACTION macro.
@@ -455,7 +455,7 @@ ACTION_P2(ReturnEqualsEitherOf, first, second) {
 }
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+# pragma warning(pop)
 #endif
 
 TEST(LinkTest, TestActionP2Macro) {
