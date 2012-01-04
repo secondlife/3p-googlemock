@@ -9,7 +9,7 @@ set -e
 
 PROJECT="gmock"
 VERSION="1.5.0"
-SOURCE_DIR="$PROJECT-$VERSION"
+SOURCE_DIR="$PROJECT"
 
 if [ -z "$AUTOBUILD" ] ; then 
     fail
