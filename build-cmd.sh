@@ -41,8 +41,10 @@ pushd "$SOURCE_DIR"
 
             # copy headers
             mkdir -p "$stage/include/$PROJECT"
+            mkdir -p "$stage/include/gtest"
             popd
             cp -rv include "$stage/"
+            cp -rv gtest/include "$stage/"
 
         ;;
         "darwin")
