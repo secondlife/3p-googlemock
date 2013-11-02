@@ -26,6 +26,7 @@ set -x
 stage="$(pwd)/stage"
 pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
+
         "windows")
             pushd msvc/2010
             load_vsvars
@@ -46,31 +47,40 @@ pushd "$SOURCE_DIR"
             cp -rv gtest/include "$stage/"
 
         ;;
+
         "darwin")
             # TODO: fix the mac build
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" ./configure --prefix="$stage"
             make
             make install
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make check
+            fi
             
             mv "$stage/lib" "$stage/release"
             mkdir -p "$stage/lib"
             mv "$stage/release" "$stage/lib"
         ;;
+
         "linux")
-            # Prefer gcc-4.1 if available. 
-            if [[ -f /usr/bin/gcc-4.1 && -f /usr/bin/g++-4.1 ]] ; then
-                export CC=gcc-4.1
-                export CXX=g++-4.1
-            fi
             
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32 -O2" CXXFLAGS="-m32" ./configure --prefix="$stage" --libdir="$stage/lib/release"
             make
             make install
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make check
+            fi
             
             make distclean
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32 -O0 -g" CXXFLAGS="-m32" ./configure --prefix="$stage" --libdir="$stage/lib/debug"
             make
             make install
+            # conditionally run unit tests
+            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
+                make check
+            fi
             
         ;;
     esac
