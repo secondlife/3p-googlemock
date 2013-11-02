@@ -29,12 +29,12 @@
 //
 // Author: wan@google.com (Zhanyong Wan)
 
-#include <gmock/gmock-generated-nice-strict.h>
+#include "gmock/gmock-generated-nice-strict.h"
 
 #include <string>
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <gtest/gtest-spi.h>
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+#include "gtest/gtest-spi.h"
 
 // This must not be defined inside the ::testing namespace, or it will
 // clash with ::testing::Mock.
@@ -57,10 +57,10 @@ using testing::HasSubstr;
 using testing::NiceMock;
 using testing::StrictMock;
 
-#if GTEST_HAS_STREAM_REDIRECTION_
+#if GTEST_HAS_STREAM_REDIRECTION
 using testing::internal::CaptureStdout;
 using testing::internal::GetCapturedStdout;
-#endif  // GTEST_HAS_STREAM_REDIRECTION_
+#endif
 
 // Defines some mock classes needed by the tests.
 
@@ -107,7 +107,7 @@ class MockBar {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(MockBar);
 };
 
-#if GTEST_HAS_STREAM_REDIRECTION_
+#if GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that a nice mock generates no warning for uninteresting calls.
 TEST(NiceMockTest, NoWarningForUninterestingCall) {
@@ -137,6 +137,7 @@ TEST(NiceMockTest, NoWarningForUninterestingCallAfterDeath) {
 TEST(NiceMockTest, InfoForUninterestingCall) {
   NiceMock<MockFoo> nice_foo;
 
+  const string saved_flag = GMOCK_FLAG(verbose);
   GMOCK_FLAG(verbose) = "info";
   CaptureStdout();
   nice_foo.DoThis();
@@ -147,9 +148,10 @@ TEST(NiceMockTest, InfoForUninterestingCall) {
   nice_foo.DoThat(true);
   EXPECT_THAT(GetCapturedStdout(),
               HasSubstr("Uninteresting mock function call"));
+  GMOCK_FLAG(verbose) = saved_flag;
 }
 
-#endif  // GTEST_HAS_STREAM_REDIRECTION_
+#endif  // GTEST_HAS_STREAM_REDIRECTION
 
 // Tests that a nice mock allows expected calls.
 TEST(NiceMockTest, AllowsExpectedCall) {
