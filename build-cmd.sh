@@ -64,11 +64,10 @@ pushd "$SOURCE_DIR"
         ;;
 
         "linux")
-            if [ -z "$CC" -a `which gcc-4.6` ]; then
-                # Prefer 4.6
-                export CC=gcc-4.6
-                export CXX=g++-4.6
-            fi
+            # Prefer 4.6
+            export CC=gcc-4.6
+            export CXX=g++-4.6
+
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" CFLAGS="-m32 -O2" CXXFLAGS="-m32" ./configure --prefix="$stage" --libdir="$stage/lib/release"
             make
             make install
