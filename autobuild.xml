@@ -18,9 +18,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e52cf8be6f7e285eff8f8671810b77df</string>
+              <string>7856ed94bf33773b0356b23adc1dbdab</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/289003/arch/Darwin/installer/boost-1.55.0-darwin-20140414.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290191/arch/Darwin/installer/boost-1.55.0-darwin-20140521.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -30,9 +30,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6bea4b8528439f37381a807b9be87756</string>
+              <string>1fbf9f45eb7f298c204b66e923a4dc69</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/289003/arch/Linux/installer/boost-1.55.0-linux-20140414.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290191/arch/Linux/installer/boost-1.55.0-linux-20140521.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -42,9 +42,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5de094775997e47ea55eff5a348c585e</string>
+              <string>a2a4a3a45a1fd7fb01f6d6a73a095641</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/289003/arch/CYGWIN/installer/boost-1.55.0-windows-20140414.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290191/arch/CYGWIN/installer/boost-1.55.0-windows-20140521.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -92,6 +92,7 @@
             <string>include/gmock/internal/*.h</string>
             <string>include/gtest/*.h</string>
             <string>include/gtest/internal/*.h</string>
+            <string>docs/google-mock/README.Linden</string>
           </array>
           <key>name</key>
           <string>common</string>

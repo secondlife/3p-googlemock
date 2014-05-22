@@ -48,8 +48,6 @@ pushd "$SOURCE_DIR"
         ;;
 
         "darwin")
-            # TODO: fix the mac build
-
             # Select SDK with full path.  This shouldn't have much effect on this
             # build but adding to establish a consistent pattern.
             #
@@ -65,7 +63,8 @@ pushd "$SOURCE_DIR"
                 CFLAGS="$opts -O0 -gdwarf-2" \
                 CXXFLAGS="$opts -O0 -gdwarf-2" \
                 LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --prefix="$stage" --libdir="$stage"/lib/debug
+                ./configure --with-pic --enable-static=yes --enable-shared=no \
+                --prefix="$stage" --libdir="$stage"/lib/debug
             make
             make install
 
@@ -81,7 +80,8 @@ pushd "$SOURCE_DIR"
                 CFLAGS="$opts -gdwarf-2" \
                 CXXFLAGS="$opts -gdwarf-2" \
                 LDFLAGS="-L$stage/packages/lib/release" \
-                ./configure --prefix="$stage" --libdir="$stage"/lib/release
+                ./configure --with-pic --enable-static=yes --enable-shared=no \
+                --prefix="$stage" --libdir="$stage"/lib/release
             make
             make install
 
@@ -132,7 +132,8 @@ pushd "$SOURCE_DIR"
                 CFLAGS="$opts -O0 -g" \
                 CXXFLAGS="$opts -O0 -g" \
                 LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --prefix="$stage" --libdir="$stage"/lib/debug
+                ./configure --with-pic --enable-static=yes --enable-shared=no \
+                --prefix="$stage" --libdir="$stage"/lib/debug
             make
             make install
 
@@ -148,7 +149,8 @@ pushd "$SOURCE_DIR"
                 CFLAGS="$opts" \
                 CXXFLAGS="$opts" \
                 LDFLAGS="-L$stage/packages/lib/release" \
-                ./configure --prefix="$stage" --libdir="$stage"/lib/release
+                ./configure --with-pic --enable-static=yes --enable-shared=no \
+                --prefix="$stage" --libdir="$stage"/lib/release
             make
             make install
 
@@ -163,8 +165,11 @@ pushd "$SOURCE_DIR"
 
     # copy license info
     mkdir -p "$stage/LICENSES"
-    cp COPYING  "$stage/LICENSES/$PROJECT.txt"
+    cp -a COPYING  "$stage/LICENSES/$PROJECT.txt"
 popd
+
+mkdir -p "$stage"/docs/google-mock/
+cp -a README.Linden "$stage"/docs/google-mock/
 
 pass
 

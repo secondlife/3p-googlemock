@@ -77,37 +77,26 @@
 
     Linux (debug and release):
     * lib/release/libgmock.a
-    * lib/release/libgmock.so (symlink)
-    * lib/release/libgmock.so.0 (symlink)
-    * lib/release/libgmock.so.0.0.0 (shared library)
     * lib/release/libgmock_main.a
-    * lib/release/libgtest_main.so
-    * lib/release/libgmock_main.so
-    * lib/release/libgmock_main.so.0
-    * lib/release/libgmock_main.so.0.0.0
     * lib/release/libgtest.a
-    * lib/release/libgtest.so.0
-    * lib/release/libgtest.so.0.0.0
     * lib/release/libgtest_main.a
-    * lib/release/libgtest_main.so.0
-    * lib/release/libgtest_main.so.0.0.0
     * lib/debug/libgmock.a
-    * lib/debug/libgmock.so
-    * lib/debug/libgmock.so.0
-    * lib/debug/libgmock.so.0.0.0
     * lib/debug/libgmock_main.a
-    * lib/debug/libgmock_main.so
-    * lib/debug/libgmock_main.so.0
-    * lib/debug/libgmock_main.so.0.0.0
     * lib/debug/libgtest.a
-    * lib/debug/libgtest.so
-    * lib/debug/libgtest.so.0
-    * lib/debug/libgtest.so.0.0.0
     * lib/debug/libgtest_main.a
-    * lib/debug/libgtest_main.so
-    * lib/debug/libgtest_main.so.0
-    * lib/debug/libgtest_main.so.0.0.0
 
+
+5.  Consumers/Dependents
+
+    Consumers *may* need to include gmock/gtest headers before any
+    Boost headers.  Not certain about this but it may be a source of
+    problems.
+
+    Packages dependent on gmock/gtest which will need attention
+    (autobuild.xml) after changes.  This is not authoritative, use
+    appropriate build tools to find all dependents.
+
+    * viewer
     
 
 ===================================================================
