@@ -18,9 +18,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b1affb78dc318c2d7f068a4e90021132</string>
+              <string>b57789bd22dd166aade4a35ec5d36fbb</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290414/arch/Darwin/installer/boost-1.55.0-darwin-20140530.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290566/arch/Darwin/installer/boost-1.55.0-darwin-20140602.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -30,9 +30,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3a9326e65d948cf168979869871d8444</string>
+              <string>2f076eae296600a1b810ce375dc4b42d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290414/arch/Linux/installer/boost-1.55.0-linux-20140530.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290566/arch/Linux/installer/boost-1.55.0-linux-20140602.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -42,9 +42,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2976a49fbcb4b89a6be7b6811fd78591</string>
+              <string>8af0500013739866a41cfc2ce90e4f4b</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290414/arch/CYGWIN/installer/boost-1.55.0-windows-20140530.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290566/arch/CYGWIN/installer/boost-1.55.0-windows-20140602.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
