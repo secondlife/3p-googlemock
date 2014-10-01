@@ -175,12 +175,12 @@
           <string>windows</string>
         </map>
       </map>
-      <key>version</key>
-      <string>1.7.0</string>
+      <key>version_file</key>
+      <string>version.txt</string>
     </map>
     <key>type</key>
     <string>autobuild</string>
     <key>version</key>
-    <string>1.2</string>
+    <string>1.3</string>
   </map>
 </llsd>

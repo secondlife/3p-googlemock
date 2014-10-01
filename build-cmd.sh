@@ -10,6 +10,8 @@ set -e
 PROJECT="gmock"
 SOURCE_DIR="$PROJECT"
 
+#As with breakpad version has been generated artificially and resides in the version.txt file.
+
 if [ -z "$AUTOBUILD" ] ; then 
     fail
 fi
@@ -169,6 +171,7 @@ pushd "$SOURCE_DIR"
 popd
 
 mkdir -p "$stage"/docs/google-mock/
+cp $stage/../version.txt $stage
 cp -a README.Linden "$stage"/docs/google-mock/
 
 pass
