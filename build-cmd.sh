@@ -10,9 +10,7 @@ set -e
 PROJECT="gmock"
 SOURCE_DIR="$PROJECT"
 
-#As with breakpad version has been generated artificially and resides in the version.txt file.
-
-if [ -z "$AUTOBUILD" ] ; then 
+if [ -z "$AUTOBUILD" ] ; then
     fail
 fi
 
@@ -26,6 +24,12 @@ eval "$("$AUTOBUILD" source_environment)"
 set -x
 
 stage="$(pwd)/stage"
+
+VERSION_HEADER_FILE="$SOURCE_DIR/configure"
+version=$(sed -n -E "s/PACKAGE_VERSION='([0-9.]+)'/\1/p" "${VERSION_HEADER_FILE}")
+build=${AUTOBUILD_BUILD_ID:=0}
+echo "${version}.${build}" > "${stage}/VERSION.txt"
+
 pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
@@ -50,15 +54,9 @@ pushd "$SOURCE_DIR"
         ;;
 
         "darwin")
-            # Select SDK with full path.  This shouldn't have much effect on this
-            # build but adding to establish a consistent pattern.
-            #
-            # sdk=/Developer/SDKs/MacOSX10.6.sdk/
-            # sdk=/Developer/SDKs/MacOSX10.7.sdk/
-            # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
-            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
+            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/
 
-            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.6}"
+            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
 
             # Debug first
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
@@ -91,7 +89,7 @@ pushd "$SOURCE_DIR"
             if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
                 make check
             fi
-            
+
             make distclean
         ;;
 
@@ -143,7 +141,7 @@ pushd "$SOURCE_DIR"
             if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
                 make check
             fi
-            
+
             make distclean
 
             # Release last
@@ -160,7 +158,7 @@ pushd "$SOURCE_DIR"
             if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
                 make check
             fi
-            
+
             make distclean
         ;;
     esac
@@ -170,9 +168,8 @@ pushd "$SOURCE_DIR"
     cp -a COPYING  "$stage/LICENSES/$PROJECT.txt"
 popd
 
-mkdir -p "$stage"/docs/google-mock/
-cp $stage/../version.txt $stage
-cp -a README.Linden "$stage"/docs/google-mock/
+mkdir -p "$stage"/docs/googlemock/
+cp -a README.Linden "$stage"/docs/googlemock/
 
 pass
 
