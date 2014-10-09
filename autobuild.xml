@@ -5,8 +5,12 @@
     <map>
       <key>boost</key>
       <map>
+        <key>copyright</key>
+        <string>(see individual source files)</string>
+        <key>description</key>
+        <string>Boost C++ Libraries</string>
         <key>license</key>
-        <string>boost</string>
+        <string>boost 1.0</string>
         <key>license_file</key>
         <string>LICENSES/boost.txt</string>
         <key>name</key>
@@ -18,9 +22,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b57789bd22dd166aade4a35ec5d36fbb</string>
+              <string>78a3ed60ed950cf6544c31401e69fc1b</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3pl_3p-boost-update/rev/290566/arch/Darwin/installer/boost-1.55.0-darwin-20140602.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/boost_3p-update-boost/rev/295287/arch/Darwin/installer/boost-1.56-darwin-295287.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -50,6 +54,8 @@
             <string>windows</string>
           </map>
         </map>
+        <key>version</key>
+        <string>1.56</string>
       </map>
     </map>
     <key>package_description</key>
