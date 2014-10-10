@@ -22,9 +22,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>78a3ed60ed950cf6544c31401e69fc1b</string>
+              <string>ebbdee3a936e1ce3fc63da64fdab01b1</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/boost_3p-update-boost/rev/295287/arch/Darwin/installer/boost-1.56-darwin-295287.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/boost_3p-update-boost/rev/295362/arch/Darwin/installer/boost-1.56-darwin-295362.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
