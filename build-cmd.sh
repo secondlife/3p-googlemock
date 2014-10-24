@@ -34,7 +34,7 @@ pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
         "windows")
-            pushd msvc/2010
+            pushd msvc/2013
                 load_vsvars
                 build_sln "$PROJECT.sln" "Debug|Win32"
                 build_sln "$PROJECT.sln" "Release|Win32"
