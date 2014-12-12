@@ -58,8 +58,16 @@ pushd "$SOURCE_DIR"
 
             opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
 
+            # GoogleMock has a couple directory-related unit tests that
+            # succeed on OS X 10.10 Yosemite when the build is run by hand on
+            # an Administrator user account, but which fail under TeamCity
+            # because the TC user account is intentionally NOT Administrator.
+            # Disable those specific tests only under TC: when running the
+            # build by hand, leave them enabled.
+            TEAMCITY="${TEAMCITY_PROJECT_NAME:+-DTEAMCITY}"
+
             # Debug first
-            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
+            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include $TEAMCITY" \
                 CFLAGS="$opts -O0 -gdwarf-2" \
                 CXXFLAGS="$opts -O0 -gdwarf-2" \
                 LDFLAGS="-L$stage/packages/lib/debug" \
@@ -76,7 +84,7 @@ pushd "$SOURCE_DIR"
             make distclean
 
             # Release last
-            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
+            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include $TEAMCITY" \
                 CFLAGS="$opts -gdwarf-2" \
                 CXXFLAGS="$opts -gdwarf-2" \
                 LDFLAGS="-L$stage/packages/lib/release" \
