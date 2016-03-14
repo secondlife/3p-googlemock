@@ -33,22 +33,24 @@ echo "${version}.${build}" > "${stage}/VERSION.txt"
 pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
-        "windows")
+        windows*)
             pushd msvc/2013
                 load_vsvars
-                build_sln "$PROJECT.sln" "Debug|Win32"
-                build_sln "$PROJECT.sln" "Release|Win32"
 
-                mkdir -p "$stage/lib/debug"
+                build_sln "$PROJECT.sln" "Release|$AUTOBUILD_WIN_VSPLATFORM"
+
                 mkdir -p "$stage/lib/release"
 
-                cp -a Release/*\.lib $stage/lib/release/
-                cp -a Debug/*\.lib $stage/lib/debug/
+                if [ "$AUTOBUILD_ADDRSIZE" = 32 ]
+                    then cp -a Release/*\.lib $stage/lib/release/
+                    else cp -a x64/Release/*\.lib $stage/lib/release/
+                fi
 
                 # copy headers
                 mkdir -p "$stage/include/$PROJECT"
                 mkdir -p "$stage/include/gtest"
             popd
+
             cp -a include "$stage/"
             cp -a gtest/include "$stage/"
         ;;
