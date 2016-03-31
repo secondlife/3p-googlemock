@@ -6,6 +6,8 @@ cd "$(dirname "$0")"
 set -x
 # make errors fatal
 set -e
+# complain about unset env variables
+set -u
 
 PROJECT="gmock"
 SOURCE_DIR="$PROJECT"
@@ -15,13 +17,18 @@ if [ -z "$AUTOBUILD" ] ; then
 fi
 
 if [ "$OSTYPE" = "cygwin" ] ; then
-    export AUTOBUILD="$(cygpath -u $AUTOBUILD)"
+    autobuild="$(cygpath -u $AUTOBUILD)"
+else
+    autobuild="$AUTOBUILD"
 fi
 
 # load autobuild provided shell functions and variables
 set +x
-eval "$("$AUTOBUILD" source_environment)"
+eval "$("$autobuild" source_environment)"
 set -x
+
+# set LL_BUILD and friends
+set_build_variables convenience Release
 
 stage="$(pwd)/stage"
 
@@ -55,10 +62,8 @@ pushd "$SOURCE_DIR"
             cp -a gtest/include "$stage/"
         ;;
 
-        "darwin")
-            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/
-
-            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
+        darwin*)
+            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD}"
 
             # GoogleMock has a couple directory-related unit tests that
             # succeed on OS X 10.10 Yosemite when the build is run by hand on
@@ -68,27 +73,10 @@ pushd "$SOURCE_DIR"
             # build by hand, leave them enabled.
             TEAMCITY="${TEAMCITY_PROJECT_NAME:+-DTEAMCITY}"
 
-            # Debug first
+            # Release
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include $TEAMCITY" \
-                CFLAGS="$opts -O0 -gdwarf-2" \
-                CXXFLAGS="$opts -O0 -gdwarf-2" \
-                LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --with-pic --enable-static=yes --enable-shared=no \
-                --prefix="$stage" --libdir="$stage"/lib/debug
-            make
-            make install
-
-            # conditionally run unit tests
-            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                make check
-            fi
-
-            make distclean
-
-            # Release last
-            CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include $TEAMCITY" \
-                CFLAGS="$opts -gdwarf-2" \
-                CXXFLAGS="$opts -gdwarf-2" \
+                CFLAGS="$opts" \
+                CXXFLAGS="$opts" \
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --with-pic --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --libdir="$stage"/lib/release
@@ -103,7 +91,7 @@ pushd "$SOURCE_DIR"
             make distclean
         ;;
 
-        "linux")
+        linux*)
             # Linux build environment at Linden comes pre-polluted with stuff that can
             # seriously damage 3rd-party builds.  Environmental garbage you can expect
             # includes:
@@ -119,17 +107,17 @@ pushd "$SOURCE_DIR"
             #
             # unset DISTCC_HOSTS CC CXX CFLAGS CPPFLAGS CXXFLAGS
 
-            # Prefer gcc-4.6 if available.
-            if [[ -x /usr/bin/gcc-4.6 && -x /usr/bin/g++-4.6 ]]; then
-                export CC=/usr/bin/gcc-4.6
-                export CXX=/usr/bin/g++-4.6
-            fi
+##          # Prefer gcc-4.6 if available.
+##          if [[ -x /usr/bin/gcc-4.6 && -x /usr/bin/g++-4.6 ]]; then
+##              export CC=/usr/bin/gcc-4.6
+##              export CXX=/usr/bin/g++-4.6
+##          fi
 
-            # Default target to 32-bit
-            opts="${TARGET_OPTS:--m32}"
+            # Default target per autobuild --address-size
+            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD}"
 
             # Handle any deliberate platform targeting
-            if [ -z "$TARGET_CPPFLAGS" ]; then
+            if [ -z "${TARGET_CPPFLAGS:-}" ]; then
                 # Remove sysroot contamination from build environment
                 unset CPPFLAGS
             else
@@ -137,25 +125,8 @@ pushd "$SOURCE_DIR"
                 export cppflags="$TARGET_CPPFLAGS"
             fi
 
-            # Debug first
-            CPPFLAGS="${cppflags} -DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
-                CFLAGS="$opts -O0 -g" \
-                CXXFLAGS="$opts -O0 -g" \
-                LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --with-pic --enable-static=yes --enable-shared=no \
-                --prefix="$stage" --libdir="$stage"/lib/debug
-            make
-            make install
-
-            # conditionally run unit tests
-            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                make check
-            fi
-
-            make distclean
-
-            # Release last
-            CPPFLAGS="${cppflags} -DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
+            # Release
+            CPPFLAGS="${cppflags:-} -DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
                 CFLAGS="$opts" \
                 CXXFLAGS="$opts" \
                 LDFLAGS="-L$stage/packages/lib/release" \
@@ -182,4 +153,3 @@ mkdir -p "$stage"/docs/googlemock/
 cp -a README.Linden "$stage"/docs/googlemock/
 
 pass
-
