@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 cd "$(dirname "$0")"
 
 # turn on verbose debugging output for parabuild logs.
-set -x
+exec 4>&1; export BASH_XTRACEFD=4; set -x
 # make errors fatal
 set -e
 # complain about unset env variables
@@ -13,7 +13,7 @@ PROJECT="gmock"
 SOURCE_DIR="$PROJECT"
 
 if [ -z "$AUTOBUILD" ] ; then
-    fail
+    exit 1
 fi
 
 if [ "$OSTYPE" = "cygwin" ] ; then
@@ -22,15 +22,12 @@ else
     autobuild="$AUTOBUILD"
 fi
 
-# load autobuild provided shell functions and variables
-set +x
-eval "$("$autobuild" source_environment)"
-set -x
-
-# set LL_BUILD and friends
-set_build_variables convenience Release
-
 stage="$(pwd)/stage"
+
+# load autobuild provided shell functions and variables
+source_environment_tempfile="$stage/source_environment.sh"
+"$autobuild" source_environment > "$source_environment_tempfile"
+. "$source_environment_tempfile"
 
 VERSION_HEADER_FILE="$SOURCE_DIR/configure"
 version=$(sed -n -E "s/PACKAGE_VERSION='([0-9.]+)'/\1/p" "${VERSION_HEADER_FILE}")
@@ -63,7 +60,7 @@ pushd "$SOURCE_DIR"
         ;;
 
         darwin*)
-            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD}"
+            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD_RELEASE}"
 
             # GoogleMock has a couple directory-related unit tests that
             # succeed on OS X 10.10 Yosemite when the build is run by hand on
@@ -114,7 +111,7 @@ pushd "$SOURCE_DIR"
 ##          fi
 
             # Default target per autobuild --address-size
-            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD}"
+            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD_RELEASE}"
 
             # Handle any deliberate platform targeting
             if [ -z "${TARGET_CPPFLAGS:-}" ]; then
@@ -151,5 +148,3 @@ popd
 
 mkdir -p "$stage"/docs/googlemock/
 cp -a README.Linden "$stage"/docs/googlemock/
-
-pass
