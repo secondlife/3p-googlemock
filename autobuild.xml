@@ -34,9 +34,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b2271aaf49210b7346c612492b36d903</string>
+              <string>ad440d316656fc2193f89b059bbe8c05</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/Darwin/installer/boost-1.57-darwin64-317807.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/683/1364/boost-1.57-darwin64-500674.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7ec134903774cb7f61469ef22e95a5b4</string>
+              <string>f41b9d6e7ed1f5f5e9b499879365ad4d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/Linux/installer/boost-1.57-linux64-317807.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/682/1369/boost-1.57-linux64-500674.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -70,9 +70,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f54be5e7a42742a80932f1cb4d9c1c4c</string>
+              <string>bd50da5aa2da9ed8c8350ababebeba75</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/CYGWIN/installer/boost-1.57-windows-317807.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/685/1359/boost-1.57-windows-500674.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -82,9 +82,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>228fba9e3b62044de3b2e5a5e2977a06</string>
+              <string>f117701bdae655c61b2447452fa56227</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/CYGWIN/installer/boost-1.57-windows64-317807.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/684/1356/boost-1.57-windows64-500674.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
