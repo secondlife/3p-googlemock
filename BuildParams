@@ -3,3 +3,4 @@ public_build = true
 
 USE_INCREDIBUILD=0
 
+buildscripts_shared_more_NAMEs="build_variables"
