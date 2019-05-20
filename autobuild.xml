@@ -34,9 +34,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>80d22cb0d7ac1545aa62866f1758f4df</string>
+              <string>d42bf805fdc2084bc8d642937f2709b3</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/35800/299782/boost-1.67-darwin64-526347.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/37733/318031/boost-1.67-darwin64-527377.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -70,9 +70,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d41fe673a667174df6fdad0e01d3c8d6</string>
+              <string>2463d77963a564f87222d10860400303</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/35802/299776/boost-1.67-windows-526347.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/37734/318018/boost-1.67-windows-527377.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -82,9 +82,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9c795bed19ab2eae0bbadca279943ff1</string>
+              <string>d8c9ad53e8b16735c0acedf4daf13017</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/35801/299769/boost-1.67-windows64-526347.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/37735/318025/boost-1.67-windows64-527377.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
