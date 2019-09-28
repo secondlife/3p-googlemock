@@ -34,9 +34,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d42bf805fdc2084bc8d642937f2709b3</string>
+              <string>5f210778a1fd7bcbc286ea1eec09f5d9</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/37733/318031/boost-1.67-darwin64-527377.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/44384/392137/boost-1.67-darwin64-531381.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -70,9 +70,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2463d77963a564f87222d10860400303</string>
+              <string>59add8c74a7955917c88a25ebc84b568</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/37734/318018/boost-1.67-windows-527377.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/44393/392045/boost-1.67-windows-531381.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -82,16 +82,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d8c9ad53e8b16735c0acedf4daf13017</string>
+              <string>9a6d1801c88e18f42a2228c21043800f</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/37735/318025/boost-1.67-windows64-527377.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/44389/392031/boost-1.67-windows64-531381.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.57</string>
+        <string>1.67</string>
       </map>
     </map>
     <key>package_description</key>
