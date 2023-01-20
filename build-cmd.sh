@@ -38,7 +38,7 @@ pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
         windows*)
-            pushd msvc/2013
+            pushd msvc/2017
                 load_vsvars
 
                 build_sln "$PROJECT.sln" "Release|$AUTOBUILD_WIN_VSPLATFORM"
