@@ -305,7 +305,7 @@ def GenerateFile(path, content):
 
   print('Updating file %s . . .' % path)
 
-  f = file(path, 'w+')
+  f = open(path, 'w+')
   print(content, end=' ', file=f)
   f.close()
 
