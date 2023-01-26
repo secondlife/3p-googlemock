@@ -36,13 +36,6 @@ import sys
 from cpp import ast
 from cpp import utils
 
-# Preserve compatibility with Python 2.3.
-try:
-  _dummy = set
-except NameError:
-  import sets
-  set = sets.Set
-
 _VERSION = (1, 0, 1)  # The version of this script.
 # How many spaces to indent.  Can set me with the INDENT environment variable.
 _INDENT = 2
@@ -144,7 +137,7 @@ def _GenerateMocks(filename, source, ast_list, desired_class_names):
         # so we have to make up names here.
         # TODO(paulchang): Handle non-type template arguments (e.g.
         # template<typename T, int N>).
-        template_arg_count = len(class_node.templated_types.keys())
+        template_arg_count = len(class_node.templated_types)
         template_args = ['T%d' % n for n in range(template_arg_count)]
         template_decls = ['typename ' + arg for arg in template_args]
         lines.append('template <' + ', '.join(template_decls) + '>')
@@ -211,7 +204,7 @@ def main(argv=sys.argv):
 
   builder = ast.BuilderFromSource(source, filename)
   try:
-    entire_ast = filter(None, builder.Generate())
+    entire_ast = [_f for _f in builder.Generate() if _f]
   except KeyboardInterrupt:
     return
   except:
