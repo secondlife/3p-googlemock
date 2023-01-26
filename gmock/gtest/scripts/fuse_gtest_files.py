@@ -60,7 +60,6 @@ __author__ = 'wan@google.com (Zhanyong Wan)'
 
 import os
 import re
-import sets
 import sys
 
 # We assume that this file is in the scripts/ directory in the Google
@@ -147,7 +146,7 @@ def FuseGTestH(gtest_root, output_dir):
   """Scans folder gtest_root to generate gtest/gtest.h in output_dir."""
 
   output_file = file(os.path.join(output_dir, GTEST_H_OUTPUT), 'w')
-  processed_files = sets.Set()  # Holds all gtest headers we've processed.
+  processed_files = set()  # Holds all gtest headers we've processed.
 
   def ProcessFile(gtest_header_path):
     """Processes the given gtest header file."""
@@ -175,7 +174,7 @@ def FuseGTestH(gtest_root, output_dir):
 def FuseGTestAllCcToFile(gtest_root, output_file):
   """Scans folder gtest_root to generate gtest/gtest-all.cc in output_file."""
 
-  processed_files = sets.Set()
+  processed_files = set()
 
   def ProcessFile(gtest_source_file):
     """Processes the given gtest source file."""

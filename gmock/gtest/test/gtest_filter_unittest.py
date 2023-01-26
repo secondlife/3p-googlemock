@@ -44,7 +44,6 @@ __author__ = 'wan@google.com (Zhanyong Wan)'
 
 import os
 import re
-import sets
 import sys
 
 import gtest_test_utils
@@ -243,14 +242,14 @@ class GTestFilterUnitTest(gtest_test_utils.TestCase):
     for slice_var in list_of_sets:
       full_partition.extend(slice_var)
     self.assertEqual(len(set_var), len(full_partition))
-    self.assertEqual(sets.Set(set_var), sets.Set(full_partition))
+    self.assertEqual(set(set_var), set(full_partition))
 
   def AdjustForParameterizedTests(self, tests_to_run):
     """Adjust tests_to_run in case value parameterized tests are disabled."""
 
     global param_tests_present
     if not param_tests_present:
-      return list(sets.Set(tests_to_run) - sets.Set(PARAM_TESTS))
+      return list(set(tests_to_run) - set(PARAM_TESTS))
     else:
       return tests_to_run
 

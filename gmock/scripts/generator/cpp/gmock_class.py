@@ -36,13 +36,6 @@ import sys
 from cpp import ast
 from cpp import utils
 
-# Preserve compatibility with Python 2.3.
-try:
-  _dummy = set
-except NameError:
-  import sets
-  set = sets.Set
-
 _VERSION = (1, 0, 1)  # The version of this script.
 # How many spaces to indent.  Can set me with the INDENT environment variable.
 _INDENT = 2
