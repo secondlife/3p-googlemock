@@ -1707,7 +1707,7 @@ def main(argv):
         print('Processing %s' % filename)
         builder = BuilderFromSource(source, filename)
         try:
-            entire_ast = filter(None, builder.Generate())
+            entire_ast = [_f for _f in builder.Generate() if _f]
         except KeyboardInterrupt:
             return
         except:
