@@ -29,6 +29,9 @@ source_environment_tempfile="$stage/source_environment.sh"
 "$autobuild" source_environment > "$source_environment_tempfile"
 . "$source_environment_tempfile"
 
+# remove_cxxstd
+source "$(dirname "$AUTOBUILD_VARIABLES_FILE")/functions"
+
 VERSION_HEADER_FILE="$SOURCE_DIR/configure"
 version=$(sed -n -E "s/PACKAGE_VERSION='([0-9.]+)'/\1/p" "${VERSION_HEADER_FILE}")
 build=${AUTOBUILD_BUILD_ID:=0}
@@ -38,7 +41,7 @@ pushd "$SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
         windows*)
-            pushd msvc/2013
+            pushd msvc/2017
                 load_vsvars
 
                 build_sln "$PROJECT.sln" "Release|$AUTOBUILD_WIN_VSPLATFORM"
@@ -72,7 +75,7 @@ pushd "$SOURCE_DIR"
 
             # Release
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include $TEAMCITY" \
-                CFLAGS="$opts" \
+                CFLAGS="$(remove_cxxstd $opts)" \
                 CXXFLAGS="$opts" \
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --with-pic --enable-static=yes --enable-shared=no \
@@ -124,7 +127,7 @@ pushd "$SOURCE_DIR"
 
             # Release
             CPPFLAGS="${cppflags:-} -DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include" \
-                CFLAGS="$opts" \
+                CFLAGS="$(remove_cxxstd $opts)" \
                 CXXFLAGS="$opts" \
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --with-pic --enable-static=yes --enable-shared=no \
