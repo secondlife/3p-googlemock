@@ -1,19 +1,14 @@
 <?xml version="1.0" ?>
-<llsd><map>
+<llsd>
+<map>
+    <key>version</key>
+    <string>1.3</string>
+    <key>type</key>
+    <string>autobuild</string>
     <key>installables</key>
     <map>
       <key>boost</key>
       <map>
-        <key>copyright</key>
-        <string>(see individual source files)</string>
-        <key>description</key>
-        <string>Boost C++ Libraries</string>
-        <key>license</key>
-        <string>boost 1.0</string>
-        <key>license_file</key>
-        <string>LICENSES/boost.txt</string>
-        <key>name</key>
-        <string>boost</string>
         <key>platforms</key>
         <map>
           <key>darwin</key>
@@ -33,11 +28,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8539775e0a0783bd252bc548b20b3472a8254c31</string>
+              <string>8170859719f18005c14590f784de9fcc7730827c</string>
               <key>hash_algorithm</key>
               <string>sha1</string>
               <key>url</key>
-              <string>https://github.com/secondlife/3p-boost/releases/download/v1.81-09d25a7/boost-1.81-darwin64-09d25a7.tar.zst</string>
+              <string>https://github.com/secondlife/3p-boost-new/releases/download/v1.84.0-r4/boost-1.84-darwin64-8415288523.tar.zst</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -59,9 +54,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8e7ee97c3083f44385b09420655ebd04</string>
+              <string>06b7c1e79b5185c40fd87fc7929c56068aa6b101</string>
+              <key>hash_algorithm</key>
+              <string>sha1</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/892/1989/boost-1.57-linux64-500883.tar.bz2</string>
+              <string>https://github.com/secondlife/3p-boost-new/releases/download/v1.84.0-r4/boost-1.84-linux64-8415288523.tar.zst</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -85,34 +82,32 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d40c86fbcb6ce064d546165cbabbf035ea80e07b</string>
+              <string>d1b26bee80af7a762bcd65b5e1b5d9d12a8d52b3</string>
               <key>hash_algorithm</key>
               <string>sha1</string>
               <key>url</key>
-              <string>https://github.com/secondlife/3p-boost/releases/download/v1.81-09d25a7/boost-1.81-windows64-09d25a7.tar.zst</string>
+              <string>https://github.com/secondlife/3p-boost-new/releases/download/v1.84.0-r4/boost-1.84-windows64-8415288523.tar.zst</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
+        <key>license</key>
+        <string>boost 1.0</string>
+        <key>license_file</key>
+        <string>LICENSES/boost.txt</string>
+        <key>copyright</key>
+        <string>(see individual source files)</string>
         <key>version</key>
-        <string>1.81</string>
+        <string>1.84</string>
+        <key>name</key>
+        <string>boost</string>
+        <key>description</key>
+        <string>Boost C++ Libraries</string>
       </map>
     </map>
     <key>package_description</key>
     <map>
-      <key>canonical_repo</key>
-      <string>https://github.com/secondlife/3p-googlemock</string>
-      <key>copyright</key>
-      <string>Copyright 2008, Google Inc.</string>
-      <key>description</key>
-      <string>a library for writing and using C++ mock classes</string>
-      <key>license</key>
-      <string>BSD</string>
-      <key>license_file</key>
-      <string>LICENSES/gmock.txt</string>
-      <key>name</key>
-      <string>googlemock</string>
       <key>platforms</key>
       <map>
         <key>common</key>
@@ -129,7 +124,7 @@
                 <array>
                   <string>-c</string>
                   <string>../build-cmd.sh</string>
-                </array>
+</array>
               </map>
               <key>name</key>
               <string>default</string>
@@ -141,15 +136,12 @@
             <string>include/gmock/internal/*.h</string>
             <string>include/gtest/*.h</string>
             <string>include/gtest/internal/*.h</string>
-            <string>docs/googlemock/README.Linden</string>
-          </array>
+</array>
           <key>name</key>
           <string>common</string>
         </map>
         <key>darwin</key>
         <map>
-          <key>build_directory</key>
-          <string>stage</string>
           <key>configurations</key>
           <map>
             <key>default</key>
@@ -166,14 +158,14 @@
           <key>manifest</key>
           <array>
             <string>lib/release/*.a</string>
-          </array>
+</array>
+          <key>build_directory</key>
+          <string>stage</string>
           <key>name</key>
           <string>darwin</string>
         </map>
         <key>linux</key>
         <map>
-          <key>build_directory</key>
-          <string>stage</string>
           <key>configurations</key>
           <map>
             <key>default</key>
@@ -190,14 +182,14 @@
           <key>manifest</key>
           <array>
             <string>lib/release/*.a</string>
-          </array>
+</array>
+          <key>build_directory</key>
+          <string>stage</string>
           <key>name</key>
           <string>linux</string>
         </map>
         <key>windows</key>
         <map>
-          <key>build_directory</key>
-          <string>stage</string>
           <key>configurations</key>
           <map>
             <key>default</key>
@@ -214,16 +206,27 @@
           <key>manifest</key>
           <array>
             <string>lib/release/*.lib</string>
-          </array>
+</array>
+          <key>build_directory</key>
+          <string>stage</string>
           <key>name</key>
           <string>windows</string>
         </map>
       </map>
+      <key>license</key>
+      <string>BSD</string>
+      <key>license_file</key>
+      <string>LICENSES/gmock.txt</string>
+      <key>copyright</key>
+      <string>Copyright 2008, Google Inc.</string>
       <key>version_file</key>
       <string>VERSION.txt</string>
+      <key>name</key>
+      <string>googlemock</string>
+      <key>canonical_repo</key>
+      <string>https://github.com/secondlife/3p-googlemock</string>
+      <key>description</key>
+      <string>a library for writing and using C++ mock classes</string>
     </map>
-    <key>type</key>
-    <string>autobuild</string>
-    <key>version</key>
-    <string>1.3</string>
-  </map></llsd>
+  </map>
+</llsd>
