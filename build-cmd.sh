@@ -2,12 +2,7 @@
 
 cd "$(dirname "$0")"
 
-# turn on verbose debugging output for parabuild logs.
-exec 4>&1; export BASH_XTRACEFD=4; set -x
-# make errors fatal
-set -e
-# complain about unset env variables
-set -u
+set -eux
 
 PROJECT="gmock"
 SOURCE_DIR="$PROJECT"
@@ -73,6 +68,8 @@ pushd "$SOURCE_DIR"
             # build by hand, leave them enabled.
             TEAMCITY="${TEAMCITY_PROJECT_NAME:+-DTEAMCITY}"
 
+            nproc=$(sysctl -n hw.ncpu)
+
             # Release
             CPPFLAGS="-DUSE_BOOST_TYPE_TRAITS -I$stage/packages/include $TEAMCITY" \
                 CFLAGS="$(remove_cxxstd $opts)" \
@@ -80,7 +77,7 @@ pushd "$SOURCE_DIR"
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --with-pic --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --libdir="$stage"/lib/release
-            make
+            make -j$nproc
             make install
 
             # conditionally run unit tests
@@ -132,7 +129,7 @@ pushd "$SOURCE_DIR"
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --with-pic --enable-static=yes --enable-shared=no \
                 --prefix="$stage" --libdir="$stage"/lib/release
-            make
+            make -j$(nproc)
             make install
 
             # conditionally run unit tests
@@ -150,4 +147,3 @@ pushd "$SOURCE_DIR"
 popd
 
 mkdir -p "$stage"/docs/googlemock/
-cp -a README.Linden "$stage"/docs/googlemock/
